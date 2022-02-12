@@ -1,12 +1,18 @@
 from discord.ext import commands
 from datetime import datetime
-from utils import channel_id, whitelist_roles, now
-from database import add_wallet, get_wallet, update_wallet
+from utils import channel_id, whitelist_roles, now, admins
+from database import add_wallet, get_wallet, update_wallet, db_export_excel, db_export_cleanup
 import messages
 import discord
+import os
 
 def is_correct_channel(message):
 	if (message.channel.id == channel_id):
+		return (1)
+	return (0)
+
+def is_admin(message):
+	if (message.author.id in admins):
 		return (1)
 	return (0)
 
@@ -36,10 +42,10 @@ class general_commands(commands.Cog):
 	
 	@commands.command()
 	async def whitelist(self, message, *args):
-		if	(not is_correct_channel(message)):
+		if	(not is_correct_channel(message) and not is_admin(message)):
 			channel = get_channel_name(message)
 			if (not channel):
-				await message.channel.send(f"Do not DM the bot!")
+				await message.channel.send(f"Sorry, you can't use my commands in the DM.")
 				return 
 			await message.reply(f"Please use me in the `#{channel.name}` channel")
 			return
@@ -79,3 +85,11 @@ class general_commands(commands.Cog):
 			return
 		channel = get_channel_name(message)
 		await message.reply(f"Please use me in the `#{channel.name}` channel")
+
+	@commands.command()
+	async def excel(self, message):
+		if (is_admin(message)):
+			db_export_excel()
+			await message.channel.send(file=discord.File('./whitelist.xlsx'))
+			db_export_cleanup()
+		return

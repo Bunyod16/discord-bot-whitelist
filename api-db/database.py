@@ -15,7 +15,7 @@ def get_wallet(user_id):
     conn = sqlite3.connect("whitelist.db")
     return (conn.execute('SELECT WALLET FROM whitelist WHERE USER_ID=?', (user_id,)))
 
-def update_wallet(wallet_address, user_id, user_name, date):
+def update_wallet(wallet_address, user_id, date):
     try:
         conn = sqlite3.connect("whitelist.db")
         conn.execute("UPDATE whitelist SET wallet=?, last_updated=? WHERE user_id=?",(wallet_address, date, user_id))
@@ -29,6 +29,4 @@ def db_export_excel():
         read_file = pd.read_csv ("./whitelist.csv")
         read_file.to_excel ('./whitelist.xlsx', index = None, header=True)
 
-def db_export_cleanup():
-        os.system("rm whitelist.csv")
-        os.system("rm whitelist.xlsx")
+
