@@ -1,7 +1,6 @@
 import os
 from discord.ext import commands, tasks
 from commands import general_commands
-from keep_alive import keep_alive
 
 PREFIX = ("!")
 bot = commands.Bot(command_prefix=PREFIX, description='Hi', help_command=None)
@@ -28,6 +27,5 @@ async def clear(ctx, number):
         await x.delete()
       print(mgs)
   
-keep_alive()
 bot.add_cog(general_commands())
 bot.run(get_token())

@@ -1,7 +1,7 @@
 from discord.ext import commands
 from datetime import datetime
 from utils import channel_id, whitelist_roles, now, admins
-from database import add_wallet, get_wallet, update_wallet, db_export_excel, db_export_cleanup
+from database import add_wallet, get_wallet, update_wallet, db_export_excel, db_cleanup_excel
 import messages
 import discord
 import os
@@ -62,21 +62,21 @@ class general_commands(commands.Cog):
 			await message.reply("Sadly you don't have a whitelist role.")
 		else:
 			emoji = '✅'
-			if (not get_wallet(message.author.id).fetchall()):
+			if (not get_wallet(message.author.id)):
 				if (not add_wallet( wallet_addr, message.author.id, message.author.name, str(now()))):
 					emoji = '❌'
 			else:
 				if not (update_wallet(wallet_addr, message.author.id, message.author.name, str(now()))):
-					emoji = '❌'
+					print("ran")
 		await message.message.add_reaction(emoji)
 
 	@commands.command()
 	async def check(self, message, *args):
-		result = get_wallet(message.author.id).fetchall()
+		result = get_wallet(message.author.id)
 		if	(not result):
 			await message.reply(messages.get_check_message_notwl())
 		else:
-			await message.reply(messages.get_check_message_wl(result[0][0]))
+			await message.reply(messages.get_check_message_wl(result))
 
 	@commands.command()
 	async def help(self, message):
@@ -91,5 +91,5 @@ class general_commands(commands.Cog):
 		if (is_admin(message)):
 			db_export_excel()
 			await message.channel.send(file=discord.File('./whitelist.xlsx'))
-			db_export_cleanup()
+			db_cleanup_excel()
 		return

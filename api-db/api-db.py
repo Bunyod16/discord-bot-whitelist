@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, send_file
 from threading import Thread
 import database
 import os
@@ -23,22 +23,27 @@ def api_add_wallet():
 def api_get_wallet():
     args = dict(request.args)
     response = database.get_wallet(args["user_id"]).fetchall()
-    result = {"user_id":args["user_id"], "wallet":response[0][0]}
-    return make_response(result)
+    if (len(response) < 1):
+        return make_response("no wallet", 400)
+    data = {"wallet":response[0][0]}
+    return make_response(data,  200)
 
 @app.route("/api/update_wallet", methods=['POST'])
 def api_update_wallet():
     args = dict(request.args)
-    response = database.update_wallet(args["wallet_address"], args["user_id"], args["date"])
+    response = database.update_wallet(args["wallet"], args["user_id"], args["date"])
     if (response == 0):
-        return make_response(400)
+        return make_response("error", 400)
     else:
-        return make_response(200)
+        return make_response("ok", 200)
 
-
-def db_export_excel():
-        os.system("bash convert_to_csv.sh")
-        read_file = pd.read_csv ("./whitelist.csv")
-        read_file.to_excel ('./whitelist.xlsx', index = None, header=True)
+@app.route('/api/csv', methods=['GET'])
+def excel_export():
+    database.db_clear_csv()
+    database.db_export_csv()
+    try:
+        return send_file('./whitelist.csv', as_attachment=True)
+    except:
+        return make_response(404)
 
 app.run(host="0.0.0.0", port=5150)

@@ -24,9 +24,9 @@ def update_wallet(wallet_address, user_id, date):
         return (0)
     return (1)
 
-def db_export_excel():
+def db_export_csv():
         os.system("bash convert_to_csv.sh")
-        read_file = pd.read_csv ("./whitelist.csv")
-        read_file.to_excel ('./whitelist.xlsx', index = None, header=True)
 
+def db_clear_csv():
+        os.system("rm whitelist.csv")
 

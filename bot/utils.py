@@ -4,6 +4,7 @@ from dateutil import tz
 channel_id = 940045123994136646
 whitelist_roles = ["Whitelist_role"]
 
+API_HOST = "http://192.168.1.180:5150"
 tzstr = "EST"
 tz = tz.gettz(tzstr)
 def now():
