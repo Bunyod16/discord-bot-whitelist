@@ -5,10 +5,13 @@ import pandas as pd
 import os
 
 def add_wallet(wallet, user_id, user_name, date):
+    print("adding wallet")
+    print(wallet, user_id, user_name, date)
     response = r.post(
         url =  f"{API_HOST}/api/add_wallet", 
         params = {"wallet":wallet, "user_id":user_id,"user_name":user_name,"date":date}
         )
+    print(response.content)
     if (response.ok):
         return (1)
     return (0)
@@ -21,6 +24,7 @@ def get_wallet(user_id):
     return (0)
 
 def update_wallet(wallet, user_id, user_name, date):
+    print("updated wallet", wallet, user_id, user_name, date)
     response = r.post(url = f"{API_HOST}/api/update_wallet",
                                 params = {"wallet":wallet, "user_id":user_id,"user_name":user_name,"date":date})
     if (response.ok):
@@ -29,6 +33,8 @@ def update_wallet(wallet, user_id, user_name, date):
 
 def db_export_excel():
         response = r.get(url = f"{API_HOST}/api/csv")
+        print(response.content)
+        print(0)
         if (response.ok):
             try :
                 csv_file = open("./whitelist.csv", "w")

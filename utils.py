@@ -1,8 +1,8 @@
 from datetime import datetime
 from dateutil import tz
 import os
-channel_id = 940045123994136646
-whitelist_roles = ["Whitelist_role"]
+channel_id = 942662187669930034
+whitelist_roles = [895446805154766918,936281488855552000]
 
 API_HOST = os.getenv("API_HOST")
 

@@ -26,7 +26,7 @@ def get_channel_name(message):
 def has_whitelist_role(message):
 	roles = message.author.roles
 	for role in roles:
-		if role.name in whitelist_roles:
+		if role.id in whitelist_roles:
 			return (1)
 	return (0)
 
@@ -89,7 +89,8 @@ class general_commands(commands.Cog):
 	@commands.command()
 	async def excel(self, message):
 		if (is_admin(message)):
-			db_export_excel()
-			await message.channel.send(file=discord.File('./whitelist.xlsx'))
-			db_cleanup_excel()
+			if (not db_export_excel()):
+				await message.channel.send("I'm sorry master, i couldnt get the excel..")
+			else:
+				await message.channel.send(file=discord.File('./whitelist.xlsx'))
 		return
