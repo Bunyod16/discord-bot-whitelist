@@ -1,13 +1,9 @@
-import os
-from discord.ext import commands, tasks
+from discord.ext import commands
 from commands import general_commands
+from utils import get_token
 
 PREFIX = ("!")
 bot = commands.Bot(command_prefix=PREFIX, description='Hi', help_command=None)
-
-def get_token():
-  token = os.getenv("TOKEN")
-  return (token)
 
 @bot.event
 async def on_ready():
